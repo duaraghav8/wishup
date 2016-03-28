@@ -39,11 +39,10 @@ module.exports = function (app, passport) {
 
   apiRouter
     .use (controllers.isLoggedIn)
-    .get ('/items', controllers.api.getItemList);
-/*    .post ('/new', controllers.api.newItem)
+    .get ('/items', controllers.api.getItemList)
+    .post ('/create', controllers.api.createItem)
     .delete ('/delete/:itemId', controllers.api.deleteItem)
     .get ('/toggle_status/:id', controllers.api.toggleItemStatus);    //toggle status -> if item.active = true, item still needs to be completed, if item.active = false, it has been completed
-*/
 
   app.use ('/api', apiRouter);
 
