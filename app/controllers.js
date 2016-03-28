@@ -1,8 +1,9 @@
 var mongoose = require ('mongoose'),
   StatusCodes = require ('./StatusCodes'),
   userModel = mongoose.model ('users'),
-  listModel = mongoose.model ('lists'),
-  exports.api = {};
+  listModel = mongoose.model ('lists');
+
+exports.api = {};
 
 exports.getLoginPage = function (req, res) {
 	if (req.user) {
@@ -22,13 +23,15 @@ exports.isLoggedIn = function (req, res, next) {
 
 exports.getUserProfile = function (req, res) {
 	res.render ('profile', {
-		username: req.user.facebook.displayName || req.user.local.email
+		username: req.user.username;
 	});
+  //res.send ('You profile motherfuckerzzz');
 };
 
 exports.logout = function (req, res) {
 	req.logout ();
 	res.redirect ('/');
+  //res.send ('get the fuck out')
 };
 
 exports.getSignupPage = function (req, res) {
@@ -43,6 +46,7 @@ exports.getSignupPage = function (req, res) {
 exports.notFound = function (req, res) {
   if (req.accepts ('html')) {
     res.render ('404', {});
+    //res.send ('not fucking found fuck off');
   }
   else { res.sendStatus (StatusCodes.NOT_FOUND); }
 };

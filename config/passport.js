@@ -3,7 +3,8 @@
 var localStrategy = require ('passport-local').Strategy,
     facebookStrategy = require ('passport-facebook').Strategy,
     userModel = require ('mongoose').model ('users'),
-    config = require ('./config');
+    config = require ('./config'),
+    requiredFields = {username: 1, _id: 1, toDoList: 1};
 
 module.exports = function (passport) {
   passport.serializeUser (function (user, done) {
@@ -23,7 +24,7 @@ module.exports = function (passport) {
     passReqToCallback: true
   },
   function (req, email, password, done) {
-    userModel.findOne ({'local.email': email, 'local.password': password}, {_id: 1, toDoList: 1}, function (err, response) {
+    userModel.findOne ({'local.email': email, 'local.password': password}, requiredFields, function (err, response) {
       if (err) {
         return (done (err));
       }
@@ -79,7 +80,7 @@ module.exports = function (passport) {
   },
   function (token, refreshToken, profile, done) {
     process.nextTick (function () {
-      userModel.findOne ({'facebook.id': profile.id}, {_id: 1, toDoList: 1}, function (err, response) {
+      userModel.findOne ({'facebook.id': profile.id}, requiredFields, function (err, response) {
         if (err) {
           return (done (err));
         }
