@@ -61,34 +61,38 @@ exports.api.getItemList = function (req, res) {
   });
 };
 
+/*
+  To be fixed
+*/
+exports.api.getItemById = function (req, res) {
+  listModel.findOne ({'items.id': mongoose.Types.ObjectId (req.params.itemId)}, function (err, item) {
+    if (err) { return (res.sendStatus (StatusCodes.INTERNAL_SERVER_ERROR)); }
+    console.log (item);
+    return (res.json (item));
+  });
+};
+
 exports.api.createItem = function (req, res) {
   var newItem = req.body;
-
   if (!req.body.description) { return (res.sendStatus (StatusCodes.NOT_ACCEPTABLE)); }
+
   newItem.done = false;
+  newItem.id = mongoose.Types.ObjectId ();
 
-  listModel.findOne ({_id: req.user.toDoList}, function (err, list) {
-    if (err) { return (res.sendStatus (StatusCodes.INTERNAL_SERVER_ERROR)); }
-
-    newItem.id = list.items.length + 1;
-    list.items.push (newItem);
-    list.save (function (err) {
-      if (err) { return (res.sendStatus (StatusCodes.INTERNAL_SERVER_ERROR)); }
-      return (res.sendStatus (StatusCodes.CREATED));
-    });
-  });
-
-/*  listModel.update ({_id: req.user.toDoList}, {$push: {items: newItem}}, function (err, response) {
+  listModel.update ({_id: req.user.toDoList}, {$push: {items: newItem}}, function (err, response) {
     if (err) { return (res.sendStatus (StatusCodes.INTERNAL_SERVER_ERROR)); }
     res.sendStatus (StatusCodes.OK);
-  });*/
+  });
 };
 
 exports.api.deleteItem = function (req, res) {
-  listModel.update ({_id: req.user.toDoList}, {$pull: {items: {id: parseInt (req.params.itemId)}}}, function (err) {
+  listModel.update ({_id: req.user.toDoList},
+  {$pull: {items: {id: mongoose.Types.ObjectId (req.params.itemId)}}},
+  function (err, response) {
     if (err) { return (res.sendStatus (StatusCodes.INTERNAL_SERVER_ERROR)); }
     return (res.sendStatus (StatusCodes.OK));
   });
 };
 
+/* To be written */
 exports.api.toggleItemStatus = function (req, res) {};
