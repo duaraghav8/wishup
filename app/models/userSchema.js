@@ -30,6 +30,15 @@ userSchema = new Schema ({
     displayName: {
       type: String
     }
+  },
+  
+  toDoList: {
+    type: String,
+    required: true
+  },
+  username: {
+    type: String,
+    required: true
   }
 });
 userModel = mongoose.model ('users', userSchema, 'users');

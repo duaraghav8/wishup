@@ -13,7 +13,12 @@ var mongoose = require ('mongoose'),
 
 listSchema = new Schema ({
   items: {
-    type: Array
+    type: Array,
+    required: true
+  },
+  user: {
+    type: String,
+    required: true
   }
 });
 listModel = mongoose.model ('lists', listSchema, 'lists');

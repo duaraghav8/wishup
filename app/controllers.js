@@ -1,7 +1,8 @@
 var mongoose = require ('mongoose'),
   StatusCodes = require ('./StatusCodes'),
   userModel = mongoose.model ('users'),
-  listModel = mongoose.model ('lists');
+  listModel = mongoose.model ('lists'),
+  exports.api = {};
 
 exports.getLoginPage = function (req, res) {
 	if (req.user) {
@@ -48,3 +49,10 @@ exports.notFound = function (req, res) {
 
 //===============API controllers===================
 //=================================================
+
+exports.api.getItemList = function (req, res) {
+  listModel.findOne ({_id: req.user.toDoList}, {items: 1}, function (err, items) {
+    if (err) { res.sendStatus (StatusCodes.INTERNAL_SERVER_ERROR); }
+    res.status (StatusCodes.OK).json (items);
+  });
+};
