@@ -61,19 +61,18 @@ exports.api.getItemList = function (req, res) {
   });
 };
 
-/*
-  //To be fixed
-
 exports.api.getItemById = function (req, res) {
-  console.log (req.params.itemId);
-  listModel.findOne ({'items.id': mongoose.Types.ObjectId (req.params.itemId)}, function (err, item) {
+  listModel.findOne ({_id: req.user.toDoList}, function (err, list) {
     if (err) { return (res.sendStatus (StatusCodes.INTERNAL_SERVER_ERROR)); }
-    console.log (item);
-    return (res.json (item));
+    else if (!list) { return (res.sendStatus (StatusCodes.NOT_FOUND)); }
+
+    return (res.json (
+      list.items.filter (function (item) {
+        if (item.id.toString () === req.params.itemId) { return (item); }
+      }) [0]
+    ));
   });
 };
-
-*/
 
 exports.api.createItem = function (req, res) {
   var newItem = req.body;
