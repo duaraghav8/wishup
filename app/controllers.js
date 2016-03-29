@@ -62,9 +62,10 @@ exports.api.getItemList = function (req, res) {
 };
 
 /*
-  To be fixed
+  //To be fixed
 */
 exports.api.getItemById = function (req, res) {
+  console.log (req.params.itemId);
   listModel.findOne ({'items.id': mongoose.Types.ObjectId (req.params.itemId)}, function (err, item) {
     if (err) { return (res.sendStatus (StatusCodes.INTERNAL_SERVER_ERROR)); }
     console.log (item);
@@ -95,4 +96,17 @@ exports.api.deleteItem = function (req, res) {
 };
 
 /* To be written */
-exports.api.toggleItemStatus = function (req, res) {};
+exports.api.toggleItemStatus = function (req, res) {
+  listModel.findOne ({_id: req.user.toDoList}, function (err, list) {
+    if (err) { return (res.sendStatus (StatusCodes.INTERNAL_SERVER_ERROR)); }
+    list.items = list.items.map (function (item) {
+      item.done = (item.id == mongoose.Types.ObjectId (req.params.itemID)) ? !item.done : item.done;
+      //console.log (item.id, typeof item.id);
+      return (item);
+    });
+    list.save (function (err) {
+      if (err) { return (res.sendStatus (StatusCodes.INTERNAL_SERVER_ERROR)); }
+      return (res.sendStatus (StatusCodes.OK));
+    });
+  });
+};

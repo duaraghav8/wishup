@@ -2,8 +2,10 @@
 
 var localStrategy = require ('passport-local').Strategy,
     facebookStrategy = require ('passport-facebook').Strategy,
-    userModel = require ('mongoose').model ('users'),
+    mongoose = require ('mongoose'),
     config = require ('./config'),
+    userModel = mongoose.model ('users'),
+    listModel = mongoose.model ('lists'),
     requiredFields = {username: 1, _id: 1, toDoList: 1};
 
 module.exports = function (passport) {
