@@ -63,7 +63,7 @@ exports.api.getItemList = function (req, res) {
 
 /*
   //To be fixed
-*/
+
 exports.api.getItemById = function (req, res) {
   console.log (req.params.itemId);
   listModel.findOne ({'items.id': mongoose.Types.ObjectId (req.params.itemId)}, function (err, item) {
@@ -72,6 +72,8 @@ exports.api.getItemById = function (req, res) {
     return (res.json (item));
   });
 };
+
+*/
 
 exports.api.createItem = function (req, res) {
   var newItem = req.body;
@@ -99,13 +101,16 @@ exports.api.deleteItem = function (req, res) {
 exports.api.toggleItemStatus = function (req, res) {
   listModel.findOne ({_id: req.user.toDoList}, function (err, list) {
     if (err) { return (res.sendStatus (StatusCodes.INTERNAL_SERVER_ERROR)); }
-    list.items = list.items.map (function (item) {
-      item.done = (item.id == mongoose.Types.ObjectId (req.params.itemID)) ? !item.done : item.done;
-      //console.log (item.id, typeof item.id);
-      return (item);
-    });
-    list.save (function (err) {
+
+    var foundItem = list.items.filter (function (item) {
+      if (item.id.toString () === req.params.itemId) { return (item); }
+    }) [0];
+    foundItem.done = !foundItem.done;
+    console.log (list.items);
+
+    list.save (function (err, response) {
       if (err) { return (res.sendStatus (StatusCodes.INTERNAL_SERVER_ERROR)); }
+      console.log (response);
       return (res.sendStatus (StatusCodes.OK));
     });
   });
