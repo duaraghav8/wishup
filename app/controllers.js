@@ -25,7 +25,7 @@ exports.getUserProfile = function (req, res) {
 /*	res.render ('profile', {
 		username: req.user.username
 	});*/
-  res.send ('You profile motherfuckerzzz');
+  return (res.send ('You profile motherfuckerzzz'));
 };
 
 exports.logout = function (req, res) {
@@ -55,9 +55,9 @@ exports.notFound = function (req, res) {
 //=================================================
 
 exports.api.getItemList = function (req, res) {
-  listModel.findOne ({_id: req.user.toDoList}, {items: 1}, function (err, items) {
+  listModel.findOne ({_id: req.user.toDoList}, {items: 1, _id: 0}, function (err, list) {
     if (err) { return (res.sendStatus (StatusCodes.INTERNAL_SERVER_ERROR)); }
-    res.status (StatusCodes.OK).json (items);
+    res.status (StatusCodes.OK).json (list.items);
   });
 };
 
@@ -76,7 +76,7 @@ exports.api.getItemById = function (req, res) {
 
 exports.api.createItem = function (req, res) {
   var newItem = req.body;
-  if (!req.body.description) { return (res.sendStatus (StatusCodes.NOT_ACCEPTABLE)); }
+  if (! (req.body.description && req.body.deadline)) { return (res.sendStatus (StatusCodes.NOT_ACCEPTABLE)); } //providing description & deadline mandatory, location optional
 
   newItem.done = false;
   newItem.id = mongoose.Types.ObjectId ();
@@ -96,7 +96,13 @@ exports.api.deleteItem = function (req, res) {
   });
 };
 
-/* To be written */
+/*
+  To be fixed
+
+  This motherfucker is just giving the illusion that its saving the updated data back into DB, its not.
+  Even "console.log (response);" prints the updated object, but when you check the DB, its still same.
+  Why such a fuck up mongoose?
+*/
 exports.api.toggleItemStatus = function (req, res) {
   listModel.findOne ({_id: req.user.toDoList}, function (err, list) {
     if (err) { return (res.sendStatus (StatusCodes.INTERNAL_SERVER_ERROR)); }

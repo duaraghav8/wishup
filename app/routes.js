@@ -43,6 +43,7 @@ module.exports = function (app, passport) {
     .get ('/items/:itemId', controllers.api.getItemById)
     .post ('/create', controllers.api.createItem)
     .delete ('/delete/:itemId', controllers.api.deleteItem)
+    .get ('/delete/:itemId', controllers.api.deleteItem)
     .get ('/toggle_status/:itemId', controllers.api.toggleItemStatus);    //toggle status -> if item.active = true, item still needs to be completed, if item.active = false, it has been completed
 
   app.use ('/api', apiRouter);
