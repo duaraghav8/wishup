@@ -4,4 +4,4 @@ Location: <b><LOCATION></b> <br />
 Deadline: <b><DEADLINE></b> <br />
 
 <a href = "http://localhost:8080/api/toggle_status/<ITEM_ID>">Mark as complete</a> <br />
-<a href = "http://localhost:8080/api/postpone/<ITEM_ID>">Notify me tomorrow at <TIME></a> <br />
+<a href = "http://localhost:8080/api/postpone/<ITEM_ID>">Notify me after 24 hours</a> <br />

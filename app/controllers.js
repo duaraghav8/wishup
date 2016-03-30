@@ -1,4 +1,4 @@
-'se strict';
+'use strict';
 
 var mongoose = require ('mongoose'),
   StatusCodes = require ('./StatusCodes'),
@@ -138,4 +138,32 @@ exports.api.toggleItemStatus = function (req, res) {
   });
 };
 
-exports.api.postponeNotif = function (req, res) {};
+/*
+  To be tested
+*/
+exports.api.postponeNotif = function (req, res) {
+  function date2String (dateObject) {
+    return (
+      dateObject.getMonth () + '/' + dateObject.getDate () + '/' + dateObject.getFullYear () +
+      ' ' + dateObject.getHours () + ':' + dateObject.getMinutes ()
+    );
+  };
+
+  listModel.findOne ({_id: req.user.toDoList}, function (err, list) {
+    if (err) { return (res.sendStatus (StatusCodes.INTERNAL_SERVER_ERROR)); }
+    if (!list) { return (res.sendStatus (StatusCodes.NOT_FOUND)); }
+
+    var date = null, foundItem = list.items.filter (function (item) {
+      if (item.id.toString () === req.params.itemId) { return (item); }
+    }) [0];
+
+    date = new Date (foundItem.deadline);
+    date.setDate (date.getDate () + 1);
+    foundItem.deadline = date2String (date);
+
+    list.save (function (err) {
+      if (err) { return (res.sendStatus (StatusCodes.INTERNAL_SERVER_ERROR)); }
+      Cron.setReminder (foundItem);
+    });
+  });
+};
