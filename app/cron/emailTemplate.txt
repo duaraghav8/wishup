@@ -1,7 +1,7 @@
 <h4>To Do List Reminder</h4><br />
 Item: <b><DESCRIPTION></b> <br />
 Location: <b><LOCATION></b> <br />
-TIME: <b><TIME></b> <br />
+Deadline: <b><DEADLINE></b> <br />
 
 <a href = "http://localhost:8080/api/toggle_status/<ITEM_ID>">Mark as complete</a> <br />
 <a href = "http://localhost:8080/api/postpone/<ITEM_ID>">Notify me tomorrow at <TIME></a> <br />

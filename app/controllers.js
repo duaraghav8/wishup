@@ -93,9 +93,11 @@ exports.api.createItem = function (req, res) {
   newItem.id = mongoose.Types.ObjectId ();
 
   listModel.update ({_id: req.user.toDoList}, {$push: {items: newItem}}, function (err) {
+    var thisItem = newItem;
     if (err) { return (res.sendStatus (StatusCodes.INTERNAL_SERVER_ERROR)); }
 
     //create a reminder job for this new item, so our client doesn't fuck up by not buying anniversary gift for wife on way back
+    thisItem.recipient = req.user.local.email;  //not error proof
     Cron.setReminder (newItem);
     return (res.sendStatus (StatusCodes.OK));
   });

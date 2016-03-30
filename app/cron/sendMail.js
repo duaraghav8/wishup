@@ -3,19 +3,19 @@ process.once ('message', function (clientDetails) {
     config = require ('../../config/config'),
     fs = require ('fs'),
 
-    emailTemplate = fs.readFileSync ('emailTemplate.txt'),
-    smtpURL = config.smtpURL.replace ('<EMAIL>', config.wishupEmailId).replace ('<PASSWORD>', config.wishupEmailPassword),
-    transporter = nodemailer.createTransport(smtpURL), // create reusable transporter object using the default SMTP transport
+    emailTemplate = fs.readFileSync ('./app/cron/emailTemplate.txt').toString (),
+    smtpUrl = config.smtpUrl.replace ('<EMAIL>', config.wishupEmailId).replace ('<PASSWORD>', config.wishupEmailPassword),
+    transporter = nodemailer.createTransport(smtpUrl), // create reusable transporter object using the default SMTP transport
 
     mailOptions = {
       from: '"Fred Foo" <foo@blurdybloop.com>', // sender address
       to: clientDetails.recipient, // list of receivers
       subject: 'To-Do Reminder', // Subject line
       html: emailTemplate
-              .replace ('<DESCRIPTION>', clientDetails.toDoItem.description)
-              .replace ('<LOCATION>', clientDetails.toDoItem.location || '')
-              .replace ('<DATE_TIME>', clientDetails.toDoItem.dateTime)
-              .replace ('<ITEM_ID>', clientDetails.todoItem.id)  //html body via template
+              .replace ('<DESCRIPTION>', clientDetails.description)
+              .replace ('<LOCATION>', clientDetails.location || '')
+              .replace ('<DEADLINE>', clientDetails.deadline)
+              .replace ('<ITEM_ID>', clientDetails.id)  //html body via template
     };  // setup e-mail data with unicode symbols
 
     // send mail with defined transport object
