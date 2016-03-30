@@ -16,7 +16,6 @@ process.once ('message', function (clientDetails) {
               .replace ('<LOCATION>', clientDetails.toDoItem.location || '')
               .replace ('<DATE_TIME>', clientDetails.toDoItem.dateTime)
               .replace ('<ITEM_ID>', clientDetails.todoItem.id)  //html body via template
-      //text: 'Hello world', // plaintext body
     };  // setup e-mail data with unicode symbols
 
     // send mail with defined transport object
