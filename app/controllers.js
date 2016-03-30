@@ -1,5 +1,8 @@
+'se strict';
+
 var mongoose = require ('mongoose'),
   StatusCodes = require ('./StatusCodes'),
+  Cron = require ('./cron/cron'),
   userModel = mongoose.model ('users'),
   listModel = mongoose.model ('lists');
 
@@ -57,7 +60,7 @@ exports.notFound = function (req, res) {
 exports.api.getItemList = function (req, res) {
   listModel.findOne ({_id: req.user.toDoList}, {items: 1, _id: 0}, function (err, list) {
     if (err) { return (res.sendStatus (StatusCodes.INTERNAL_SERVER_ERROR)); }
-    res.status (StatusCodes.OK).json (list.items);
+    return (res.status (StatusCodes.OK).json (list.items));
   });
 };
 
@@ -75,25 +78,37 @@ exports.api.getItemById = function (req, res) {
 };
 
 exports.api.createItem = function (req, res) {
-  var newItem = req.body;
-  if (! (req.body.description && req.body.deadline)) { return (res.sendStatus (StatusCodes.NOT_ACCEPTABLE)); } //providing description & deadline mandatory, location optional
+  var newItem = req.body,
+  now = new Date (), itemDeadline = new Date (req.body.deadline);
+
+  /*
+    providing description & deadline mandatory, location optional.
+    Also, make sure the date provided is not a past date (becase I haven't built a fucking time machine yet)
+  */
+  if (!(req.body.description && req.body.deadline) || now > itemDeadline) {
+    return (res.sendStatus (StatusCodes.NOT_ACCEPTABLE));
+  }
 
   newItem.done = false;
   newItem.id = mongoose.Types.ObjectId ();
 
-  listModel.update ({_id: req.user.toDoList}, {$push: {items: newItem}}, function (err, response) {
+  listModel.update ({_id: req.user.toDoList}, {$push: {items: newItem}}, function (err) {
     if (err) { return (res.sendStatus (StatusCodes.INTERNAL_SERVER_ERROR)); }
-    res.sendStatus (StatusCodes.OK);
+
+    //create a reminder job for this new item, so our client doesn't fuck up by not buying anniversary gift for wife on way back
+    Cron.setReminder (newItem);
+    return (res.sendStatus (StatusCodes.OK));
   });
 };
 
 exports.api.deleteItem = function (req, res) {
   listModel.update ({_id: req.user.toDoList},
-  {$pull: {items: {id: mongoose.Types.ObjectId (req.params.itemId)}}},
-  function (err, response) {
-    if (err) { return (res.sendStatus (StatusCodes.INTERNAL_SERVER_ERROR)); }
-    return (res.sendStatus (StatusCodes.OK));
-  });
+    {$pull: {items: {id: mongoose.Types.ObjectId (req.params.itemId)}}},
+    function (err, response) {
+      if (err) { return (res.sendStatus (StatusCodes.INTERNAL_SERVER_ERROR)); }
+      return (res.sendStatus (StatusCodes.OK));
+    }
+  );
 };
 
 /*
@@ -120,3 +135,5 @@ exports.api.toggleItemStatus = function (req, res) {
     });
   });
 };
+
+exports.api.postponeNotif = function (req, res) {};
