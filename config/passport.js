@@ -59,6 +59,7 @@ module.exports = function (passport) {
 
           newUser.local.email = email;
           newUser.local.password = password;
+          newUser.username = email;
 
           newUser.save (function (err) {
             if (err) {
@@ -90,19 +91,29 @@ module.exports = function (passport) {
           return (done (null, response));
         }
         else {
-          var newUser = new userModel ();
+          var newUser = new userModel (),
+            newToDoList = new listModel ();
 
           newUser.facebook.id    = profile.id; // set the users facebook id
           newUser.facebook.token = token; // we will save the token that facebook provides to the user
           newUser.facebook.displayName  = profile.displayName; // look at the passport user profile to see how names are returned
+          newUser.username = profile.displayName;
 
           // save our user to the database
           newUser.save(function(err) {
-            if (err) {
-              throw err;
-            }
-            // if successful, return the new user
-            return done(null, newUser);
+            if (err) { throw (err); }
+
+            // if successful, create the user's to do list and then return the new user
+            newToDoList.user = newUser._id;
+            newToDoList.items = [];
+
+            newToDoList.save (function (err) {
+              if (err) { throw (err); }
+              userModel.update ({_id: newUser._id}, {$set: {toDoList: newToDoList._id}}, {upsert: true}, function (err) {
+                if (err) { throw (err); }
+                return done(null, newUser);
+              });
+            });
           });
         }
       });
@@ -110,4 +121,4 @@ module.exports = function (passport) {
   }));
 };
 
-//Beware of the Callback Hell :-S
+//the Callback Hell strikes again :-S
