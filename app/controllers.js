@@ -13,7 +13,7 @@ exports.getLoginPage = function (req, res) {
 		res.redirect ('/profile');
 	}
 	else {
-		res.render ('index');
+		res.render ('login', {});
 	}
 };
 
@@ -25,10 +25,9 @@ exports.isLoggedIn = function (req, res, next) {
 };
 
 exports.getUserProfile = function (req, res) {
-/*	res.render ('profile', {
+	res.render ('profile', {
 		username: req.user.username
-	});*/
-  return (res.send ('You profile motherfuckerzzz'));
+	});
 };
 
 exports.logout = function (req, res) {
@@ -48,8 +47,7 @@ exports.getSignupPage = function (req, res) {
 
 exports.notFound = function (req, res) {
   if (req.accepts ('html')) {
-    //res.render ('404', {});
-    res.send ('not fucking found fuck off');
+    res.render ('404', {ErrorMessage: 'Page Not Found'});
   }
   else { res.sendStatus (StatusCodes.NOT_FOUND); }
 };

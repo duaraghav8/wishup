@@ -4,6 +4,23 @@ var controllers = require ('./controllers'),
   apiRouter = require ('express').Router ();
 
 module.exports = function (app, passport) {
+  //===============CORS==============================
+  //=================================================
+
+  app.use (function (req, res, next) {
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    // Pass to next layer of middleware
+    next();
+  });
+
   //===============Static Pages======================
   //=================================================
 
@@ -45,7 +62,7 @@ module.exports = function (app, passport) {
     .delete ('/delete/:itemId', controllers.api.deleteItem)
     .get ('/toggle_status/:itemId', controllers.api.toggleItemStatus)    //toggle status -> if item.active = true, item still needs to be completed, if item.active = false, it has been completed
     .get ('/postpone_notification/:itemId', controllers.api.postponeNotif);
-    
+
     if (process.env.NODE_ENV === 'development') {
       apiRouter
         .get ('/delete/:itemId', controllers.api.deleteItem);
