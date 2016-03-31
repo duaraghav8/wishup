@@ -32,8 +32,7 @@ exports.getUserProfile = function (req, res) {
 
 exports.logout = function (req, res) {
 	req.logout ();
-	//res.redirect ('/');
-  res.send ('get the fuck out')
+	res.redirect ('/');
 };
 
 exports.getSignupPage = function (req, res) {
