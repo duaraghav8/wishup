@@ -1,19 +1,52 @@
 function TodoCtrl($scope, $location, $http) {
   function getServerUrl () {
     return ($location.protocol() + "://" + $location.host() + ":" + $location.port());
-    //return ('http://172.16.13.186:8080');
   }
-
-  //console.log (getServerUrl ());
-  $http.get (getServerUrl () + '/api/items', {withCredentials: true}).then (function (res) {console.info (res.data);});
 
   $scope.todos = [];
   $scope.markAll = false;
+
+  $http
+    .get (getServerUrl () + '/api/items', {withCredentials: true})
+    .then (
+      function (res) {
+        for (var item in res.data) {
+          $scope.todos.push ({
+            text: res.data [item].description,
+            location: res.data [item].location,
+            id: res.data [item].id,
+            deadline: res.data [item].deadline,
+            done: res.data [item].done
+          });
+        }
+      },
+      function (err) { console.info (err); }
+    );
     
   $scope.addTodo = function() {
-      if(event.keyCode == 13 && $scope.todoText){
-          $scope.todos.push({text:$scope.todoText, done:false});
-          $scope.todoText = '';
+      var deadlineValue = document.getElementsByClassName ('form-control') [0].value,
+        address = document.getElementById('us2-address').value,
+        newItem = {
+          description: $scope.todoText,
+          done: false,
+          deadline: deadlineValue,
+          location: address,
+        };
+
+      if(event.keyCode == 13 && $scope.todoText && deadlineValue) {
+          $http
+            .post (getServerUrl () + '/api/create', newItem)
+            .then (
+              function (res) {
+                newItem.text = newItem.description;
+                delete newItem.description;
+                $scope.todos.push (newItem);
+              },
+              function (err) {}
+            );
+
+            $scope.todoText = '';
+            document.getElementsByClassName ('form-control') [0].value = '';
       }
   };
 
@@ -49,7 +82,7 @@ function TodoCtrl($scope, $location, $http) {
       
   $scope.toggleMarkAll = function() {
       angular.forEach($scope.todos, function(todo) {
-        todo.done =$scope.markAll;
+        todo.done = $scope.markAll;
       });
   };
   
@@ -59,6 +92,15 @@ function TodoCtrl($scope, $location, $http) {
     angular.forEach(oldTodos, function(todo) {
       if (!todo.done) $scope.todos.push(todo);
     });
+  };
+
+  $scope.toggle_status = function (id) {
+    $http
+      .get (getServerUrl () + '/api/toggle_status/' + id, {withCredentials: true})
+      .then (
+        function (res) { console.log (res.data); },
+        function (res) { console.log (err); }
+      );
   };
     
 }

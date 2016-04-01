@@ -110,13 +110,6 @@ exports.api.deleteItem = function (req, res) {
   );
 };
 
-/*
-  To be fixed
-
-  This motherfucker is just giving the illusion that its saving the updated data back into DB, its not.
-  Even "console.log (response);" prints the updated object, but when you check the DB, its still same.
-  Why such a fuck up mongoose?
-*/
 exports.api.toggleItemStatus = function (req, res) {
   listModel.findOne ({_id: req.user.toDoList}, function (err, list) {
     if (err) { return (res.sendStatus (StatusCodes.INTERNAL_SERVER_ERROR)); }
@@ -125,11 +118,17 @@ exports.api.toggleItemStatus = function (req, res) {
       if (item.id.toString () === req.params.itemId) { return (item); }
     }) [0];
     foundItem.done = !foundItem.done;
-    console.log (list.items);
+    //console.log (list.items);
 
-    list.save (function (err, response) {
+    /*list.save (function (err, response) {
       if (err) { return (res.sendStatus (StatusCodes.INTERNAL_SERVER_ERROR)); }
       console.log (response);
+      return (res.sendStatus (StatusCodes.OK));
+    });*/
+    
+    listModel.update ({_id: list._id}, {$set: {items: list.items}}, {upsert: true}, function (err, response) {
+      if (err) { return (res.sendStatus (StatusCodes.INTERNAL_SERVER_ERROR)); }
+      //console.log (response);
       return (res.sendStatus (StatusCodes.OK));
     });
   });

@@ -10,7 +10,7 @@ module.exports = {
     */
     var emailDue = new Date (item.deadline), timeToLapse = null;
 
-    emailDue.setMinutes (emailDue.getMinutes () - 15);
+    emailDue.setMinutes (emailDue.getMinutes () - 1);
     timeToLapse = emailDue.getTime () - (new Date ()).getTime ();   //this could cause problems if the server time differs from client time
 
     if (emailDue < (new Date ())) { return; }
