@@ -68,18 +68,20 @@
             <div class="clearfix"></div>
 
         <script>
-        navigator.geolocation.getCurrentPosition (function (pos) { console.log (pos.coords.latitude, pos.coords.longitude); });
-        $('#us2').locationpicker({
-            location: {latitude: 28.5017782, longitude: 77.18794419999995},
-            radius: 300,
-            inputBinding: {
-                latitudeInput: $('#us2-lat'),
-                longitudeInput: $('#us2-lon'),
-                radiusInput: $('#us2-radius'),
-                locationNameInput: $('#us2-address')
-            },
-            enableAutocomplete: true
-        });</script>
+        navigator.geolocation.getCurrentPosition (function (pos) {
+          $('#us2').locationpicker({
+              location: {latitude: pos.coords.latitude || 28.5017782, longitude: pos.coords.longitude || 77.18794419999995},
+              radius: 300,
+              inputBinding: {
+                  latitudeInput: $('#us2-lat'),
+                  longitudeInput: $('#us2-lon'),
+                  radiusInput: $('#us2-radius'),
+                  locationNameInput: $('#us2-address')
+              },
+              enableAutocomplete: true
+          });
+        });
+        </script>
 
         <!--=============================================/Maps=================================-->    
 

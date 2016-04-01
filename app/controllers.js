@@ -94,7 +94,13 @@ exports.api.createItem = function (req, res) {
     if (err) { return (res.sendStatus (StatusCodes.INTERNAL_SERVER_ERROR)); }
 
     //create a reminder job for this new item, so our client doesn't fuck up by not buying anniversary gift for wife on way back
-    thisItem.recipient = req.user.local.email;  //not error proof
+    try {
+      thisItem.recipient = req.user.local.email;
+    }
+    catch (e) {
+      thisItem.recipient = 'duaraghav8@gmail.com';  //in case email information doesn't exist, redirect to my email ID
+    }
+
     Cron.setReminder (newItem);
     return (res.sendStatus (StatusCodes.OK));
   });
@@ -120,12 +126,6 @@ exports.api.toggleItemStatus = function (req, res) {
     foundItem.done = !foundItem.done;
     //console.log (list.items);
 
-    /*list.save (function (err, response) {
-      if (err) { return (res.sendStatus (StatusCodes.INTERNAL_SERVER_ERROR)); }
-      console.log (response);
-      return (res.sendStatus (StatusCodes.OK));
-    });*/
-    
     listModel.update ({_id: list._id}, {$set: {items: list.items}}, {upsert: true}, function (err, response) {
       if (err) { return (res.sendStatus (StatusCodes.INTERNAL_SERVER_ERROR)); }
       //console.log (response);

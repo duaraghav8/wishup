@@ -82,7 +82,11 @@ function TodoCtrl($scope, $location, $http) {
       
   $scope.toggleMarkAll = function() {
       angular.forEach($scope.todos, function(todo) {
-        todo.done = $scope.markAll;
+        if (!todo.done) {
+          //$scope.toggle_status (todo.id);
+          console.log (todo.id);
+          todo.done = $scope.markAll;
+        }
       });
   };
   
@@ -99,7 +103,7 @@ function TodoCtrl($scope, $location, $http) {
       .get (getServerUrl () + '/api/toggle_status/' + id, {withCredentials: true})
       .then (
         function (res) { console.log (res.data); },
-        function (res) { console.log (err); }
+        function (err) { console.log (err); }
       );
   };
     
