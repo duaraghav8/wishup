@@ -98,6 +98,7 @@ module.exports = function (passport) {
           newUser.facebook.token = token; // we will save the token that facebook provides to the user
           newUser.facebook.displayName  = profile.displayName; // look at the passport user profile to see how names are returned
           newUser.username = profile.displayName;
+          newUser.toDoList = '';
 
           // save our user to the database
           newUser.save(function(err) {
@@ -109,7 +110,7 @@ module.exports = function (passport) {
 
             newToDoList.save (function (err) {
               if (err) { throw (err); }
-              userModel.update ({_id: newUser._id}, {$set: {toDoList: newToDoList._id}}, {upsert: true}, function (err) {
+              userModel.update ({_id: newUser._id}, {$set: {toDoList: newToDoList._id}}, function (err) {
                 if (err) { throw (err); }
                 return done(null, newUser);
               });

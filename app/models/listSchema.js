@@ -14,7 +14,6 @@ var mongoose = require ('mongoose'),
 listSchema = new Schema ({
   items: {
     type: Array,
-    required: true
   },
   user: {
     type: String,

@@ -31,10 +31,9 @@ userSchema = new Schema ({
       type: String
     }
   },
-  
+
   toDoList: {
-    type: String,
-    required: true
+    type: String
   },
   username: {
     type: String,
