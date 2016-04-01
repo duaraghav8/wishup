@@ -92,6 +92,11 @@ function TodoCtrl($scope, $location, $http) {
   
   $scope.clear = function() {
     var oldTodos = $scope.todos;
+
+    angular.forEach (oldTodos, function (todo) {
+      if (todo.done) { $scope.delete (todo.id); }
+    });
+
     $scope.todos = [];
     angular.forEach(oldTodos, function(todo) {
       if (!todo.done) $scope.todos.push(todo);
@@ -101,6 +106,15 @@ function TodoCtrl($scope, $location, $http) {
   $scope.toggle_status = function (id) {
     $http
       .get (getServerUrl () + '/api/toggle_status/' + id, {withCredentials: true})
+      .then (
+        function (res) { console.log (res.data); },
+        function (err) { console.log (err); }
+      );
+  };
+
+  $scope.delete = function (id) {
+    $http
+      .delete (getServerUrl () + '/api/delete/' + id, {withCredentials: true})
       .then (
         function (res) { console.log (res.data); },
         function (err) { console.log (err); }
