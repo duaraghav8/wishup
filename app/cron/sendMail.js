@@ -18,7 +18,7 @@ process.once ('message', function (clientDetails) {
     transporter = nodemailer.createTransport(smtpUrl), // create reusable transporter object using the default SMTP transport
 
     mailOptions = {
-      from: '"Raghav" <raghav@raghavdua.com>', // sender address
+      from: '"Fred Foo" <foo@blurdybloop.com>', // sender address
       to: clientDetails.recipient, // list of receivers
       subject: 'To-Do Reminder', // Subject line
       html: replaceAll (emailTemplate, {

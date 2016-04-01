@@ -5,8 +5,8 @@ module.exports = {
   sessionSecret: 'DoIWannaKnow',
 
   smtpUrl: 'smtps://<EMAIL>:<PASSWORD>@smtp.gmail.com',
-  wishupEmailId: 'duaraghav8@gmail.com',//'idonotcheckmymails@gmail.com',
-  wishupEmailPassword: '1xusng23@',//'Ninja19f',
+  wishupEmailId: '',  //email
+  wishupEmailPassword: '',  //password
 
   facebook: {
     clientID: '570197129796800',
