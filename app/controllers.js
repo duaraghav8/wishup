@@ -123,7 +123,9 @@ exports.api.toggleItemStatus = function (req, res) {
     var foundItem = list.items.filter (function (item) {
       if (item.id.toString () === req.params.itemId) { return (item); }
     }) [0];
-    foundItem.done = !foundItem.done;
+
+    try { foundItem.done = !foundItem.done; }
+    catch (e) { return (res.sendStatus (StatusCodes.NOT_ACCEPTABLE)); }   //if none of the items match the item requested, then query is invalid
     //console.log (list.items);
 
     listModel.update ({_id: list._id}, {$set: {items: list.items}}, {upsert: true}, function (err, response) {

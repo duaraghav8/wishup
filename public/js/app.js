@@ -83,8 +83,8 @@ function TodoCtrl($scope, $location, $http) {
   $scope.toggleMarkAll = function() {
       angular.forEach($scope.todos, function(todo) {
         if (!todo.done) {
-          //$scope.toggle_status (todo.id);
-          console.log (todo.id);
+          $scope.toggle_status (todo.id);
+          //console.log (todo.id);
           todo.done = $scope.markAll;
         }
       });
