@@ -55,18 +55,27 @@ module.exports = function (passport) {
           return (done (null, false));
         }
         else {
-          var newUser = new userModel ();
+          var newUser = new userModel (),
+            newToDoList = new listModel ();
 
           newUser.local.email = email;
           newUser.local.password = password;
-          newUser.username = email;
+          newUser.username = email.split ('@') [0];
+          newUser.toDoList = '';
 
           newUser.save (function (err) {
-            if (err) {
-              throw (err);
-            }
+            if (err) { throw (err); }
             else {
-              return (done (null, newUser));
+              newToDoList.user = newUser._id;
+              newToDoList.items = [];
+
+              newToDoList.save (function (err) {
+                if (err) { throw (err); }
+                userModel.update ({_id: newUser._id}, {$set: {toDoList: newToDoList._id}}, function (err) {
+                  if (err) { throw (err); }
+                  return done(null, newUser);
+                });
+              });
             }
           });
         }
