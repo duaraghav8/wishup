@@ -39,7 +39,9 @@ function TodoCtrl($scope, $location, $http) {
             .then (
               function (res) {
                 newItem.text = newItem.description;
+                newItem.id = res.data.id;
                 delete newItem.description;
+                console.log (newItem.id);
                 $scope.todos.push (newItem);
               },
               function (err) {}

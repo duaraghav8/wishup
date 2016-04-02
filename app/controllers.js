@@ -102,7 +102,7 @@ exports.api.createItem = function (req, res) {
     }
 
     Cron.setReminder (newItem);
-    return (res.sendStatus (StatusCodes.OK));
+    return (res.status (StatusCodes.OK).json ({id: newItem.id}));   //send the newly created item's ID back to Client
   });
 };
 
