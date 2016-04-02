@@ -88,7 +88,8 @@ module.exports = function (passport) {
   passport.use (new facebookStrategy ({
     clientID: config.facebook.clientID, // your App ID
     clientSecret: config.facebook.clientSecret, // your App Secret
-    callbackURL: 'http://localhost:8080/auth/facebook/callback'
+    //callbackURL: 'http://localhost:8080/auth/facebook/callback'
+    callbackURL: config.facebook.callbackURL
   },
   function (token, refreshToken, profile, done) {
     process.nextTick (function () {
