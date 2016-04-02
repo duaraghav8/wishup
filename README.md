@@ -13,3 +13,5 @@ Stack:
     Back End: Node.js + Express, Authentication with Passport
 
     Front End: Angular for SPA, JQuery for Location & Date-Time Pickers
+    
+ps- App is live @ http://raghavdua.com:8080/
