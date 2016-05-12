@@ -1,5 +1,11 @@
 'use strict';
 
+/*
+  Ensure we're in the project directory, so relative paths work as expected
+  no matter where we actually fire the app from.
+*/
+process.chdir(__dirname);
+
 var app = require ('./config/express') (),
   listener = null;
 
