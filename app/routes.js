@@ -64,11 +64,15 @@ module.exports = function (app, passport) {
     .get ('/postpone_notification/:itemId', controllers.api.postponeNotif);
 
     if (process.env.NODE_ENV === 'development') {
+      /*
+      	ideally, item deletion should employ HTTP DELETE method (as has been done above).
+      	But accept GET method for deletion during development for easy testing
+      */
       apiRouter
         .get ('/delete/:itemId', controllers.api.deleteItem);
     }
 
-  app.use ('/api', apiRouter);
+  app.use ('/api', apiRouter);		//route all API calls through apiRouter
 
   //===============404===============================
   //=================================================
